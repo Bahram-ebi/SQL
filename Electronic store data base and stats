@@ -1,0 +1,28 @@
+--Create a electranic store database
+CREATE TABLE store (id INTEGER PRIMARY KEY, item text, aile text, price INTEGER, popularity INTEGER);
+
+insert into store values(1, "iphone 11","1a", 900, 1);
+insert into store values(2, "iphone 12","1a", 950, 1);
+insert into store values(3, "iphone 13","1a", 1200, 1);
+insert into store values(4, "iphone 14","1a", 1500, 1);
+insert into store values(5, "Mac Book Air","2b", 2000, 2);
+insert into store values(6, "Asus TUF","2b", 1650, 3);
+insert into store values(7, "Lenovo Zenbook","2b", 2500, 2);
+insert into store values(8, "Mac Book Pro","2b", 3450, 3);
+insert into store values(9, "AlienWare","2b", 3000, 4);
+insert into store values(10, "MSI laptop","2b", 1300, 5);
+insert into store values(11, "JBL speakear","3c", 450, 4);
+insert into store values(12, "sony earphone","3c", 399, 2);
+insert into store values(13, "Airpod Pro","3c", 345, 1);
+insert into store values(14, "Audio Technica","3c", 200, 5);
+insert into store values(15, "Marshal headphone","3c", 150, 5);
+
+--display the database ordered by price.
+select * from store order by price desc;
+
+--display the average price in each aile
+select aile,avg(price) as average_price from store group by aile;
+
+--display the average price of items by popularity
+select popularity,avg(price) as average_price from store
+group by popularity
