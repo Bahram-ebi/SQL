@@ -1,0 +1,81 @@
+create table actors(id INTEGER primary key,
+    name text,
+    age integer,
+    gender text,
+    movie_id integer,
+    spouse_id integer
+);
+create table movies(movie_id integer primary key,
+    name text,
+    genre text,
+    release_year integer,
+    worldwide integer
+);
+
+create table theater(theater_id integer primary key,
+    name text,
+    city text,
+    movie_id integer
+);
+
+insert into actors values(1,"Chris Evans",38,"Male",1,2);
+insert into actors values(2,"Elizabet Olsen",30,"Female",1,1);
+insert into actors values(3,"Tom Hardy",42,"Male",2,null);
+insert into actors values(4,"Elizabet Banks",45,"Female",3,5);
+insert into actors values(5,"Paul Rudd",47,"Male",4,4);
+insert into actors values(6,"Sabrina Carpenter",20,"Female",5,Null);
+insert into actors values(7,"Jordan Fisher",29,"Male",5,null);
+insert into actors values(8,"Tom Hanks",65,"Male",6,null);
+insert into actors values(9,"Zendaya",19,"Female",7,10);
+insert into actors values(10,"Tom Holland",22,"Male",7,9);
+
+insert into movies values(1,"Avengers End Game","Action",2019,100000000);
+insert into movies values(2,"venom","Action",2016,250000000);
+insert into movies values(4,"Anchorman","Comedy",2014,300000000);
+insert into movies values(3,"Lego Movie","Animation",2015,422000000);
+insert into movies values(5,"work it","Musical",2018,140000000);
+insert into movies values(6,"Cast Away","Adventure",2000,470000000);
+insert into movies values(7,"Spider Man","Action",2022,1000000000);
+
+insert into theater values(1,"Chadstion Cinema","Melbourne",1);
+insert into theater values(2,"M-city","Melbourne",4);
+insert into theater values(3,"Doncaster","Melbourne",5);
+insert into theater values(4,"main Theater","Sydney",4);
+insert into theater values(5,"Torento Cinema","Torento",7);
+insert into theater values(6,"Los Angeles Cinema","Los Angeles",2);
+insert into theater values(7,"Texas Cinema","Texas",3);
+insert into theater values(8,"New York Cinema","New York",3);
+
+-- display the movies that each actors stars in
+select a.name, m.name, m.genre
+from actors a
+left outer join movies m on m.movie_id = a.movie_id
+order by m.name,a.name;
+
+-- display each movie star couple
+select a.name,couple.name as spouse 
+from actors a 
+inner join actors couple on a.spouse_id = couple.id;
+
+--display the theater movies list and its actors
+select t.name,subqueary.movie_name,subqueary.name
+from theater t
+left outer join (select a.name, m.movie_id,m.name as movie_name
+                    from actors a
+                    left outer join movies m on m.movie_id = a.movie_id) 
+subqueary on t.movie_id = subqueary.movie_id
+order by t.name,movie_name;
+
+--display which actors has been in the movies that grossed over 200 millions
+
+select a.name,m.worldwide
+from actors a
+left outer join movies m on m.movie_id = a.movie_id
+where worldwide > 200000000;
+
+-- display how many movies each theater shows on each genre
+select m.genre,count(m.genre) as number,t.name
+from theater t
+left outer join movies m on m.movie_id = t.movie_id
+group by m.genre
+order number desc;
