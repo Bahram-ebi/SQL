@@ -40,3 +40,10 @@ select count(distinct acctnum) as number_of_cutomers,avg(quantity* price) as ave
 from bit_db.customers
 left outer join bit_db.FebSales on orderid = order_id
 where quantity > 2;
+
+--List all the products sold in Los Angeles in February, and include how many of each were sold.
+select product,sum(quantity) as number_of_sales
+from bit_db.febsales
+where lower(location) like '%los angeles%'
+group by product
+order by number_of_sales desc;
