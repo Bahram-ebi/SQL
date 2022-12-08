@@ -1,0 +1,81 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# Then I created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+#Creating the table: 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+#Then I inserted the Spotify Data .csv into the table.
+
+#Next, I explored the data using the following SQL. 
+
+-- display how many track each artist has in the database
+select artist_name,count(track_name) as number_of_tracks
+from bit_db.Spotifydata
+group by artist_name
+order by number_of_tracks desc,artist_name;
+
+-- how mnay tracks each artist has songs that are in E major;
+select artist_name,count(id) as number_of_tracks
+from bit_db.Spotifydata
+group by artist_name
+having song_key = 4 and song_mode = 1;
+
+-- display the modality and the and dancability of the each song
+select track_name, artist_name,
+case 
+    when song_mode = 0 then 'minor'
+    when song_mode = 1 then 'major'
+end as mode,
+case 
+    when danceability > 0.5 then 'danc3able'
+    else 'slow song'
+end as danceability
+from bit_db.Spotifydata
+order by track_name, artist_name,mode;
+
+-- display how many major tracks are instrumentals
+select count(id) number_of_tracks
+from bit_db.Spotifydata
+group by (song_mode)
+having song_mode = 1 and instrumentalness > 0.5;
+
+--display how many songs are likely has been recorded live
+select count(id)
+from bit_db.Spotifydata
+where liveness > 0.8;
+
+-- display top 10 songs which their artist is popular and are in minor
+select artist_name,track_name,popularity
+from bit_db.Spotifydata
+where song_mode = 0
+order by popularity desc limit 10;
+
+-- display the song that are high energy and are happy or cheerfull 
+select track_name,artist_name
+from bit_db.Spotifydata
+where energy > 0.75 and valence > 0.5;
+
+-- display the the songs and order it by amount lyrics in song
+select track_name,artist_name
+from bit_db.Spotifydata
+order by speechiness asc;
